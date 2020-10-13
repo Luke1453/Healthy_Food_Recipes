@@ -8,7 +8,7 @@ class Recipe {
   Recipe(this.recipeID, this.recipeName, this.recipeDesc, this.recipeImage);
 
   Recipe.fromJson(Map<String, dynamic> json){
-    recipeID = int.parse(json['recipeID']);
+    recipeID = json['recipeID'];
     recipeName = json['recipeName'];
     recipeDesc = json['recipeDesc'];
     recipeImage = json['recipeImage'];

@@ -34,26 +34,21 @@ class _HomePageState extends State<HomePage> {
 
   List<Recipe> _recipes = List<Recipe>();
 
-  Future<List<Recipe>> fetchRecipes() async {
+  void fetchRecipes() async {
 
-    var recipes = List<Recipe>();
     var jsonHelp = JsonHelper('assets/recipe_data.json');
     var recipeJsonList = await jsonHelp.getJsonArray();
-    //print(recipeJsonList.toString()+'recipes list');
+    print(recipeJsonList.toString()+'recipes list');
 
     for(var recipeJson in recipeJsonList){
-      recipes.add(Recipe.fromJson(recipeJson));
+      _recipes.add(Recipe.fromJson(recipeJson));
     }
-    return recipes;
   }
 
   @override
   void initState() {
     setState(() {
-      fetchRecipes().then((value) {
-        _recipes = value;
-        print(_recipes.toString()+'asasasas');
-      });
+      fetchRecipes();
     });
     super.initState();
   }
