@@ -1,100 +1,98 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'dart:convert';
 
 import 'utility.dart';
 import 'recipe.dart';
+import 'recipe_page.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Healthy Food Recipes',
       theme: ThemeData(
-        primaryColor: Colors.yellow,
+        primaryColor: Colors.lightGreenAccent,
       ),
       home: HomePage(),
     );
-
   }
 }
 
 class HomePage extends StatefulWidget {
-
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-
   List<Recipe> _recipes = List<Recipe>();
-
-  void fetchRecipes() async {
-
-    var jsonHelp = JsonHelper('assets/recipe_data.json');
-    var recipeJsonList = await jsonHelp.getJsonArray();
-    print(recipeJsonList.toString()+'recipes list');
-
-    for(var recipeJson in recipeJsonList){
-      _recipes.add(Recipe.fromJson(recipeJson));
-    }
-  }
 
   @override
   void initState() {
     setState(() {
-      fetchRecipes();
+      _fetchRecipes();
     });
     super.initState();
   }
 
-  // Widget _buildSuggestions() {
-  //   return ListView.builder(
-  //       padding: EdgeInsets.all(16.0),
-  //       itemBuilder: (context, i) {
-  //         if (i.isOdd) return Divider(height: 2.0, color: Colors.yellow,); // adds the divider between word pairs
-  //
-  //         final index = i ~/ 2; // calculates nr of word pairs
-  //         if (index >= _suggestions.length) {
-  //           _suggestions.addAll(generateWordPairs().take(10));
-  //         }
-  //         return _buildRow(_suggestions[index]);
-  //       });
-  // }
+  //async function that fetches all recipe data form .json in assets
+  void _fetchRecipes() async {
+    var jsonHelp = JsonHelper('assets/recipe_data.json');
+    var recipeJsonList = await jsonHelp.getJsonArray();
+    print(recipeJsonList.toString() + 'recipes list');
 
-  // Widget _buildRow(WordPair pair) {
-  //   final alreadySaved = _saved.contains(pair);
-  //
-  //   return ListTile(
-  //     title: Text(
-  //       pair.asPascalCase,
-  //       style: _biggerFont,
-  //     ),
-  //     trailing: Icon(
-  //       alreadySaved ? Icons.favorite : Icons.favorite_border,
-  //       color: alreadySaved ? Colors.red : null,
-  //     ),
-  //     onTap: () {
-  //       setState(() {
-  //         if(alreadySaved) _saved.remove(pair);
-  //         else _saved.add(pair);
-  //       });
-  //     },
-  //   );
-  // }
+    for (var recipeJson in recipeJsonList) {
+      _recipes.add(Recipe.fromJson(recipeJson));
+    }
+
+    setState(() {
+      print('Force widget rebuild after fetching Json data');
+    });
+  }
+
+  //function that creates a route to recipe page
+  void _pushRecipePage(Recipe recipe){
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          return RecipePage(recipe);
+        },
+      ),
+    );
+  }
+
+  Widget _buildRecipeList() {
+    return ListView.builder(
+        itemCount: _recipes.length,
+        itemBuilder: (context, i) {
+          return Card(
+            color: Colors.white70,
+            margin: const EdgeInsets.all(6),
+            child: InkWell(
+              onTap: (){
+                print('Tapped ${_recipes[i].recipeName} card');
+                _pushRecipePage(_recipes[i]);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                _recipes[i].recipeName,
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              ),
+              ),
+            ),
+          );
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('Home Page widget build function called');
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Healthy Food Recipes'),
-        ),
-      body: null,//_buildSuggestions(),
+      appBar: AppBar(
+        title: Text('Healthy Food Recipes'),
+      ),
+      body: _buildRecipeList(),
     );
   }
 }
