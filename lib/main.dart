@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'utility.dart';
 import 'recipe.dart';
 import 'recipe_page.dart';
+import 'constants.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,11 +11,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Healthy Food Recipes',
-      theme: ThemeData(
-        primaryColor: Colors.lightGreenAccent,
-      ),
-      home: HomePage(),
+        title: 'Healthy Food Recipes',
+        theme: ThemeData(
+            primaryColor: kPrimaryColor,
+            backgroundColor: kBackgroundColor
+        ),
+        home: HomePage(),
+        debugShowCheckedModeBanner: false
     );
   }
 }
@@ -51,14 +54,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   //function that creates a route to recipe page
-  void _pushRecipePage(Recipe recipe){
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) {
-          return RecipePage(recipe);
-        },
-      ),
-    );
+  void _pushRecipePage(Recipe recipe) {
+    Navigator.push(context, MaterialPageRoute<void>(
+      builder: (BuildContext context) {
+        return RecipePage(recipe);
+      }
+    ));
   }
 
   Widget _buildRecipeList() {
@@ -66,19 +67,22 @@ class _HomePageState extends State<HomePage> {
         itemCount: _recipes.length,
         itemBuilder: (context, i) {
           return Card(
-            color: Colors.white70,
-            margin: const EdgeInsets.all(6),
+            color: kCardColor,
+            elevation: 2.5,
+            margin: const EdgeInsets.all(kDefaultPadding / 2),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 print('Tapped ${_recipes[i].recipeName} card');
                 _pushRecipePage(_recipes[i]);
               },
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(kDefaultPadding),
                 child: Text(
-                _recipes[i].recipeName,
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
+                  _recipes[i].recipeName,
+                  style: TextStyle(fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: kTextColor),
+                ),
               ),
             ),
           );
