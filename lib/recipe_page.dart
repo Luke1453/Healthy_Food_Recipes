@@ -17,7 +17,7 @@ class RecipePage extends StatelessWidget {
           title: Text(recipeData.recipeName,
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           actions: [
-            IconButton(icon: Icon(Icons.add_comment), onPressed: () => {
+            IconButton(icon: Icon(Icons.comment), onPressed: () => {
               //push new route to comment page
               Navigator.push(context, MaterialPageRoute<void>(
                   builder: (BuildContext context) {

@@ -1,0 +1,34 @@
+{
+  "array": [
+    {
+      "commentID": 1,
+      "recipeID": 1,
+      "commentTitle": "Homemade Pizza_1 comment",
+      "commentBody": "This is a great recipe when you don't want to wait for the dough to rise. You just mix it and allow it to rest for 5 minutes and then it's ready to go!! It yields a soft, chewy crust. For a real treat, I recommend you use bread flour and bake it on a pizza stone, but all-purpose flour works well too. Enjoy!"
+    },
+    {
+      "commentID": 2,
+      "recipeID": 1,
+      "commentTitle": "Homemade Pizza_2 comment",
+      "commentBody": "This is a great recipe when you don't want to wait for the dough to rise. You just mix it and allow it to rest for 5 minutes and then it's ready to go!! It yields a soft, chewy crust. For a real treat, I recommend you use bread flour and bake it on a pizza stone, but all-purpose flour works well too. Enjoy!"
+    },
+    {
+      "commentID": 3,
+      "recipeID": 1,
+      "commentTitle": "Homemade Pizza_3 comment",
+      "commentBody": "This is a great recipe when you don't want to wait for the dough to rise. You just mix it and allow it to rest for 5 minutes and then it's ready to go!! It yields a soft, chewy crust. For a real treat, I recommend you use bread flour and bake it on a pizza stone, but all-purpose flour works well too. Enjoy!"
+    },
+    {
+      "commentID": 4,
+      "recipeID": 1,
+      "commentTitle": "Homemade Pizza_4 comment",
+      "commentBody": "This is a great recipe when you don't want to wait for the dough to rise. You just mix it and allow it to rest for 5 minutes and then it's ready to go!! It yields a soft, chewy crust. For a real treat, I recommend you use bread flour and bake it on a pizza stone, but all-purpose flour works well too. Enjoy!"
+    },
+    {
+      "commentID": 5,
+      "recipeID": 1,
+      "commentTitle": "Homemade Pizza_5 comment",
+      "commentBody": "This is a great recipe when you don't want to wait for the dough to rise. You just mix it and allow it to rest for 5 minutes and then it's ready to go!! It yields a soft, chewy crust. For a real treat, I recommend you use bread flour and bake it on a pizza stone, but all-purpose flour works well too. Enjoy!"
+    }
+  ]
+}
