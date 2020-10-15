@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:healthy_food_recipes/recipe.dart';
+import 'package:healthy_food_recipes/recipe_comment_page.dart';
 import 'constants.dart';
 
 class RecipePage extends StatelessWidget {
   RecipePage(this.recipeData);
 
   final Recipe recipeData;
-  BuildContext buildContext;
 
   @override
   Widget build(BuildContext context) {
-    buildContext=context;
     Size pageSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -18,7 +17,14 @@ class RecipePage extends StatelessWidget {
           title: Text(recipeData.recipeName,
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
           actions: [
-            IconButton(icon: Icon(Icons.add_comment), onPressed: _pushRecipeCommentPage)
+            IconButton(icon: Icon(Icons.add_comment), onPressed: () => {
+              //push new route to comment page
+              Navigator.push(context, MaterialPageRoute<void>(
+                  builder: (BuildContext context) {
+                    return CommentPage(recipeData);
+                  }
+              ))
+            })
           ],
         ),
         body: SingleChildScrollView(
@@ -87,10 +93,12 @@ class RecipePage extends StatelessWidget {
                   padding: const EdgeInsets.all(kDefaultPadding / 2),
                   child: Column(
                       children: _directionsWidgetList(
-                          recipeData.recipeInstructions))),
+                          recipeData.recipeInstructions))
+              ),
             ],
           ),
-        ));
+        )
+    );
   }
 
   List<Widget> _directionsWidgetList(Map<String, dynamic> recipeInstructions) {
@@ -123,23 +131,5 @@ class RecipePage extends StatelessWidget {
     }
     return _directionsWidgets;
   }
-
-  //TODO: look up nested routes because this doesn't work
-  // void _pushRecipeCommentPage() {
-  //   Navigator.push(context,MaterialPageRoute<void>(
-  //     builder: (BuildContext context) {
-  //       return RecipePage(recipe);
-  //     },
-  //   ),)
-  //
-  //
-  //   Navigator.of(context).push(
-  //     MaterialPageRoute<void>(
-  //       builder: (BuildContext context) {
-  //         return RecipePage(recipe);
-  //       },
-  //     ),
-  //   );
-  // }
 
 }
