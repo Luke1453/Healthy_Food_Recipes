@@ -27,8 +27,6 @@ class _CommentPageState extends State<CommentPage> {
     super.initState();
   }
 
-  //todo: add comment serialization
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,9 +36,17 @@ class _CommentPageState extends State<CommentPage> {
         actions: [
           IconButton(
               icon: Icon(Icons.add_comment),
-              onPressed: () => {
-                    //TODO: create void method to add a new comment and place it here.
-                  })
+              onPressed: () {
+                //adding new comment
+                print('Tapped add comment button');
+                int newCommentID;
+                if(_commentList.isEmpty){newCommentID = 1;}
+                else{newCommentID = _commentList.last.commentID+1;}
+                RecipeComment newComment = RecipeComment(recipeData.recipeID, newCommentID, null, null);
+                newComment.state=CommentState.newComment;
+                _editComment(context, newComment).then((comment) => handleEditedComments(comment));
+
+              })
         ],
       ),
       body: SingleChildScrollView(
@@ -62,9 +68,8 @@ class _CommentPageState extends State<CommentPage> {
             elevation: 2.5,
             child: InkWell(
                 onTap: () {
-                  //todo: add comment editing functionality
                   print('Tapped ${comment.commentID.toString()} comment card');
-                  //_pushRecipePage(_recipes[i]);
+                  _editComment(context, comment).then((comment) => handleEditedComments(comment));
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(kDefaultPadding),
@@ -78,7 +83,7 @@ class _CommentPageState extends State<CommentPage> {
                           decoration: TextDecoration.underline),
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: kDefaultPadding/2),
+                      margin: const EdgeInsets.only(top: kDefaultPadding / 2),
                       child: Text(
                         comment.commentBody,
                         textAlign: TextAlign.left,
@@ -112,4 +117,80 @@ class _CommentPageState extends State<CommentPage> {
       print('Force widget rebuild after fetching Json data');
     });
   }
+
+Future<RecipeComment> _editComment(BuildContext context, RecipeComment comment) {
+    var titleEditingController = TextEditingController();
+    var bodyEditingController = TextEditingController();
+
+    if(comment!=null){
+      titleEditingController.text = comment.commentTitle;
+      bodyEditingController.text = comment.commentBody;
+    }
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(child: Container(
+            padding: const EdgeInsets.all(kDefaultPadding ),
+            height: 390,
+            child: Column(children: [
+                Container( padding: EdgeInsets.all(kDefaultPadding/4), child: TextField(
+                  controller: titleEditingController,
+                  decoration: InputDecoration.collapsed(hintText: 'Comment Name',
+                      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black,))),
+                  style: TextStyle(height: 1.5, fontSize: 20),
+                  autocorrect: true,
+                )
+                ),
+              Container( padding: EdgeInsets.symmetric(horizontal: kDefaultPadding/4, vertical: kDefaultPadding), child: TextField(
+                  controller: bodyEditingController,
+                  decoration: InputDecoration.collapsed(hintText: 'Comment Body',
+                      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black))),
+                  style: TextStyle( height: 1.5, fontSize: 20),
+                  autocorrect: true,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 9,
+                  minLines: 9,
+                )),
+              Container( padding: EdgeInsets.all(kDefaultPadding/4), child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(padding:EdgeInsets.only(right: 35) ,child: RaisedButton(
+                    child: Text('Delete'),
+                    color: Colors.red,
+                    onPressed: () {
+                      comment.commentTitle=titleEditingController.text;
+                      comment.commentBody=bodyEditingController.text;
+                      comment.state = CommentState.deleteComment;
+                      Navigator.of(context).pop(comment);
+                    })),
+                  RaisedButton(
+                    child: Text('Cancel'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    }),
+                  RaisedButton(
+                    child: Text('Save'),
+                    color: kPrimaryColor,
+                    onPressed: () {
+                      comment.commentTitle=titleEditingController.text;
+                      comment.commentBody=bodyEditingController.text;
+                      comment.state = CommentState.editedComment;
+                      Navigator.of(context).pop(comment);
+                    }),
+                ],
+              ))
+              ],
+            ),
+          ));
+        });
+  }
+}
+
+handleEditedComments(RecipeComment comment){
+  //todo: add comment serialization
+
+
+  //calling set state to fetch new serialized comments and rebuild view
+
 }
