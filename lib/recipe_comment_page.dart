@@ -40,12 +40,16 @@ class _CommentPageState extends State<CommentPage> {
                 //adding new comment
                 print('Tapped add comment button');
                 int newCommentID;
-                if(_commentList.isEmpty){newCommentID = 1;}
-                else{newCommentID = _commentList.last.commentID+1;}
-                RecipeComment newComment = RecipeComment(recipeData.recipeID, newCommentID, null, null);
-                newComment.state=CommentState.newComment;
-                _editComment(context, newComment).then((comment) => handleEditedComments(comment));
-
+                if (_commentList.isEmpty) {
+                  newCommentID = 1;
+                } else {
+                  newCommentID = _commentList.last.commentID + 1;
+                }
+                RecipeComment newComment = RecipeComment(
+                    recipeData.recipeID, newCommentID, null, null);
+                _commentList.add(newComment);
+                _editComment(context, newComment)
+                    .then((comment) => handleEditedComments(comment));
               })
         ],
       ),
@@ -69,7 +73,8 @@ class _CommentPageState extends State<CommentPage> {
             child: InkWell(
                 onTap: () {
                   print('Tapped ${comment.commentID.toString()} comment card');
-                  _editComment(context, comment).then((comment) => handleEditedComments(comment));
+                  _editComment(context, comment)
+                      .then((comment) => handleEditedComments(comment));
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(kDefaultPadding),
@@ -101,28 +106,12 @@ class _CommentPageState extends State<CommentPage> {
     return _commentCards;
   }
 
-  //async function that fetches all recipe data form .json in assets
-  void _fetchComments(int recipeID) async {
-    var jsonHelp = JsonHelper('assets/recipe_comments.json');
-    var commentJsonList = await jsonHelp.getJsonArray();
-    print(commentJsonList.toString() + 'recipes list');
-
-    for (var commentJson in commentJsonList) {
-      if (commentJson['recipeID'] == recipeID) {
-        _commentList.add(RecipeComment.fromJson(commentJson));
-      }
-    }
-
-    setState(() {
-      print('Force widget rebuild after fetching Json data');
-    });
-  }
-
-Future<RecipeComment> _editComment(BuildContext context, RecipeComment comment) {
+  Future<RecipeComment> _editComment(
+      BuildContext context, RecipeComment comment) {
     var titleEditingController = TextEditingController();
     var bodyEditingController = TextEditingController();
 
-    if(comment!=null){
+    if (comment != null) {
       titleEditingController.text = comment.commentTitle;
       bodyEditingController.text = comment.commentBody;
     }
@@ -130,67 +119,160 @@ Future<RecipeComment> _editComment(BuildContext context, RecipeComment comment) 
     return showDialog(
         context: context,
         builder: (context) {
-          return Dialog(child: Container(
-            padding: const EdgeInsets.all(kDefaultPadding ),
+          return Dialog(
+              child: Container(
+            padding: const EdgeInsets.all(kDefaultPadding),
             height: 390,
-            child: Column(children: [
-                Container( padding: EdgeInsets.all(kDefaultPadding/4), child: TextField(
-                  controller: titleEditingController,
-                  decoration: InputDecoration.collapsed(hintText: 'Comment Name',
-                      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black,))),
-                  style: TextStyle(height: 1.5, fontSize: 20),
-                  autocorrect: true,
-                )
-                ),
-              Container( padding: EdgeInsets.symmetric(horizontal: kDefaultPadding/4, vertical: kDefaultPadding), child: TextField(
-                  controller: bodyEditingController,
-                  decoration: InputDecoration.collapsed(hintText: 'Comment Body',
-                      border: OutlineInputBorder(borderSide: BorderSide(color: Colors.black))),
-                  style: TextStyle( height: 1.5, fontSize: 20),
-                  autocorrect: true,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 9,
-                  minLines: 9,
-                )),
-              Container( padding: EdgeInsets.all(kDefaultPadding/4), child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Container(padding:EdgeInsets.only(right: 35) ,child: RaisedButton(
-                    child: Text('Delete'),
-                    color: Colors.red,
-                    onPressed: () {
-                      comment.commentTitle=titleEditingController.text;
-                      comment.commentBody=bodyEditingController.text;
-                      comment.state = CommentState.deleteComment;
-                      Navigator.of(context).pop(comment);
-                    })),
-                  RaisedButton(
-                    child: Text('Cancel'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    }),
-                  RaisedButton(
-                    child: Text('Save'),
-                    color: kPrimaryColor,
-                    onPressed: () {
-                      comment.commentTitle=titleEditingController.text;
-                      comment.commentBody=bodyEditingController.text;
-                      comment.state = CommentState.editedComment;
-                      Navigator.of(context).pop(comment);
-                    }),
-                ],
-              ))
+            child: Column(
+              children: [
+                Container(
+                    padding: EdgeInsets.all(kDefaultPadding / 4),
+                    child: TextField(
+                      controller: titleEditingController,
+                      decoration: InputDecoration.collapsed(
+                          hintText: 'Comment Name',
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                            color: Colors.black,
+                          ))),
+                      style: TextStyle(height: 1.5, fontSize: 20),
+                      autocorrect: true,
+                    )),
+                Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: kDefaultPadding / 4,
+                        vertical: kDefaultPadding),
+                    child: TextField(
+                      controller: bodyEditingController,
+                      decoration: InputDecoration.collapsed(
+                          hintText: 'Comment Body',
+                          border: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black))),
+                      style: TextStyle(height: 1.5, fontSize: 20),
+                      autocorrect: true,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 9,
+                      minLines: 9,
+                    )),
+                Container(
+                    padding: EdgeInsets.all(kDefaultPadding / 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                            padding: EdgeInsets.only(right: 35),
+                            child: RaisedButton(
+                                child: Text('Delete'),
+                                color: Colors.red,
+                                onPressed: () {
+                                  comment.state = CommentState.deleteComment;
+                                  Navigator.of(context).pop(comment);
+                                })),
+                        RaisedButton(
+                            child: Text('Cancel'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            }),
+                        RaisedButton(
+                            child: Text('Save'),
+                            color: kPrimaryColor,
+                            onPressed: () {
+                              comment.commentTitle =
+                                  titleEditingController.text;
+                              comment.commentBody = bodyEditingController.text;
+                              comment.state = CommentState.editedComment;
+                              Navigator.of(context).pop(comment);
+                            }),
+                      ],
+                    ))
               ],
             ),
           ));
         });
   }
-}
 
-handleEditedComments(RecipeComment comment){
-  //todo: add comment serialization
+  handleEditedComments(RecipeComment comment) {
+    //when comment state didn't change i.e. user pressed 'cancel' we skip
+    if (comment == null) {
+      return;
+    }
 
+    switch (comment.state) {
+      //deleting comment
+      case CommentState.deleteComment:
+        {
+          _commentList
+              .removeWhere((element) => element.commentID == comment.commentID);
+        }
+        break;
 
-  //calling set state to fetch new serialized comments and rebuild view
+      //handling new or edited comments
+      case CommentState.editedComment:
+        {
+          _commentList
+              .where((element) => element.commentID == comment.commentID)
+              .forEach((element) {
+            element.commentTitle = comment.commentTitle;
+            element.commentBody = comment.commentBody;
+          });
+        }
+        break;
 
+      default:
+        {
+          return;
+        }
+        break;
+    }
+
+    //todo: after handling do serialization
+    serializeComments();
+
+    //calling set state to fetch new serialized comments and rebuild view
+    setState(() {
+      _fetchComments(recipeData.recipeID);
+    });
+  }
+
+  serializeComments() async {
+    var jsonHelp = JsonHelper();
+    var commentJsonList = await jsonHelp.getJsonArray();
+    var editedCommentList = List<Map<String, dynamic>>();
+    print(commentJsonList.toString());
+
+    for (var comment in _commentList) {
+      editedCommentList.add(comment.toJson());
+    }
+
+    commentJsonList[commentJsonList.indexWhere(
+            (element) => element['recipeID'] == recipeData.recipeID)]
+        ['comments'] = editedCommentList;
+
+    var newJsonString = jsonHelp.returnJsonString(commentJsonList);
+    jsonHelp.writeJsonStringToFile(newJsonString);
+
+  }
+
+  //async function that fetches all recipe data form .json in assets
+  void _fetchComments(int recipeID) async {
+    var jsonHelp = JsonHelper();
+    await jsonHelp.createJsonFile();
+
+    var commentJsonList = await jsonHelp.getJsonArray();
+
+    var commentsJson = commentJsonList[commentJsonList
+        .indexWhere((element) => element['recipeID'] == recipeID)];
+
+    //deleting all comments form comment list to rebuild with edited comments
+    _commentList.clear();
+
+    for (var commentJson in commentsJson['comments']) {
+      _commentList
+          .add(RecipeComment.fromJson(commentJson, commentsJson['recipeID']));
+    }
+
+    setState(() {
+      print('Force widget rebuild after fetching Json data');
+    });
+  }
 }

@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
-
 enum CommentState{
-  newComment,
   editedComment,
   deleteComment,
   noState
@@ -19,10 +16,16 @@ class RecipeComment {
 
   RecipeComment(this.recipeID, this.commentID, this.commentTitle, this.commentBody);
 
-  RecipeComment.fromJson(Map<String, dynamic> json) {
+  RecipeComment.fromJson(Map<String, dynamic> json, int recipeId) {
     commentID = json['commentID'];
-    recipeID = json['recipeID'];
+    recipeID = recipeId;
     commentTitle = json['commentTitle'];
     commentBody = json['commentBody'];
   }
+
+  Map<String, dynamic> toJson() => {
+    'commentID' : commentID,
+    'commentTitle' : commentTitle,
+    'commentBody' : commentBody
+  };
 }

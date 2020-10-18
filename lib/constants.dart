@@ -5,4 +5,8 @@ const kTextColor = Color(0xFF3C4046);
 const kBackgroundColor = Color(0xFFE5E5E5);
 const kCardColor = Color(0xFFFFFFFF);
 
+const kCommentFilename = 'comments.json';
+const kCommentFilenameAssets = 'assets/recipe_comments.json';
+const kRecipeJson = 'assets/recipe_data.json';
+
 const double kDefaultPadding = 16.0;

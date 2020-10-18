@@ -40,8 +40,8 @@ class _HomePageState extends State<HomePage> {
 
   //async function that fetches all recipe data form .json in assets
   void _fetchRecipes() async {
-    var jsonHelp = JsonHelper('assets/recipe_data.json');
-    var recipeJsonList = await jsonHelp.getJsonArray();
+    var jsonHelp = JsonHelper();
+    var recipeJsonList = await jsonHelp.getRecipesJson();
     print(recipeJsonList.toString() + 'recipes list');
 
     for (var recipeJson in recipeJsonList) {
